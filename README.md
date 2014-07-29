@@ -1,24 +1,16 @@
 # Esapiserver
 
-TODO: Write a gem description
+A Sinatra/MongoDB API server to use for EmberJS development
 
 ## Installation
 
-Add this line to your application's Gemfile:
-
-    gem 'esapiserver'
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
+Run:
 
     $ gem install esapiserver
 
 ## Usage
 
-TODO: Write usage instructions here
+Under development
 
 ## Contributing
 
