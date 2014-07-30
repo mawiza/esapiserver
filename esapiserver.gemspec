@@ -27,6 +27,8 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "pry"
   spec.add_development_dependency "pry-remote"
   spec.add_development_dependency "pry-nav"
+  spec.add_development_dependency "pry-debugger"
+  spec.add_development_dependency "rack-test"
   
   spec.add_runtime_dependency 'sinatra', '~> 1.4.5'
   spec.add_runtime_dependency 'mongo', '~> 1.10.2'
@@ -35,5 +37,4 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'sinatra-cross_origin', '~> 0.3.2'
   spec.add_runtime_dependency 'activesupport-inflector', '~> 0.1.0'
   spec.add_runtime_dependency 'i18n'
-
 end

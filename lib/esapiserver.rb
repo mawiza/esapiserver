@@ -11,7 +11,7 @@ require "esapiserver/version"
 module Esapiserver
   class Server < Sinatra::Application
     mongoDB = Mongo::Connection.new
-    DB = nil
+    @@db = nil
     
     #
     #
@@ -36,7 +36,7 @@ module Esapiserver
     # running tests.
     #
     get '/select_db/:db' do
-      DB = mongoDB.db(params[:db], :pool_size => 5, :timeout => 5)
+      @@db = mongoDB.db(params[:db], :pool_size => 5, :timeout => 5)      
       "DB #{params[:db]} selected"
     end
     
@@ -45,7 +45,7 @@ module Esapiserver
     #
     get '/reset_db/:db' do  
       mongoDB.drop_database(params[:db])
-      DB = mongoDB.db(params[:db], :pool_size => 5, :timeout => 5)
+      @@db = mongoDB.db(params[:db], :pool_size => 5, :timeout => 5)      
       "DB #{params[:db]} dropped and reloaded"
     end
     
@@ -53,10 +53,10 @@ module Esapiserver
     # Get a list of collections for a specific DB
     #
     get '/db_collections' do
-      if DB == nil
+      if @@db == nil
         "Please select a DB using /select_db/:db where :db is the name of the database"
       else
-        collections = DB.collection_names
+        collections = @@db.collection_names
         "#{collections}"
       end  
     end
@@ -65,14 +65,14 @@ module Esapiserver
     #
     # Returns a list of things or a list of things that matches a specific query
     # http://localhost:4567/api/focusareas - will retrieve all the focusareas
-    # http://localhost:4567/api/focusareas?theme=53bb2eba19cfd247e4000002 - will retrieve all the focusareas
+    # http://localhost:4567/api/focusareas?theme_id=53bb2eba19cfd247e4000002 - will retrieve all the focusareas
     # belonging to the specified theme.
-    # Works only with a single query parameter or multiple id[] parameters
+    # Works only with a single query parameter or multiple ids[] parameters
     get '/api/:thing' do
       content_type :json
       query = {}
       result = {}
-      collection = DB.collection(params[:thing])
+      collection = @@db.collection(params[:thing])
     
       if request.query_string.empty?
         result = collection.find.to_a.map{|t| frombsonid(t, params[:thing])}.to_json
@@ -80,22 +80,20 @@ module Esapiserver
         if request.query_string.include? '&'
           queries = request.query_string.split('&')
           ids = []
-          queries.each do |q|
+          queries.each do |q|            
             key, value = q.split('=')
-            ids << tobsonid(value)        
+            if key != 'ids[]'
+              throw 'multiple query parameters not supported yet, except _ids[]=' 
+            end
+            ids << tobsonid(value)
           end
-          #query = "{" + modelName(params[:thing]) + "._id: { $in:['" + ids.join("','") + "]}}"
-          #query = {"_id" => { "$in" => ids }}
-          #query = {"_id" => { "$in" => ids }}
-          query = {_id: ids}
+          query = {"_id" => { "$in" => ids }}
         else
           key, value = request.query_string.split('=')
           query = {modelName(params[:thing]) + "." + key => value}
         end
-        puts query
-        result = collection.find(query).to_a.map{|t| frombsonid(t, params[:thing])}.to_json
+        result = collection.find(query).to_a.map{|t| frombsonid(t, params[:thing])}.to_json        
       end
-    
       serializeJSON(result, params[:thing])    
     end
     
@@ -113,7 +111,7 @@ module Esapiserver
     post '/api/:thing' do
       content_type :json
       json = JSON.parse(request.body.read.to_s)
-      oid = DB.collection(params[:thing]).insert(json)
+      oid = @@db.collection(params[:thing]).insert(json)
       find_one(params[:thing], oid.to_s)
     end
     
@@ -122,7 +120,7 @@ module Esapiserver
     #
     delete '/api/:thing/:id' do
       content_type :json
-      DB.collection(params[:thing]).remove({'_id' => tobsonid(params[:id])})
+      @@db.collection(params[:thing]).remove({'_id' => tobsonid(params[:id])})
       "{}"
     end
     
@@ -134,7 +132,7 @@ module Esapiserver
       selector = {'_id' => tobsonid(params[:id])}
       json = JSON.parse(request.body.read).reject{|k,v| k == 'id'}
       document = {'$set' => json}
-      result = DB.collection(params[:thing]).update(selector, document)
+      result = @@db.collection(params[:thing]).update(selector, document)
       find_one(params[:thing], params[:id])
     end
     
@@ -166,10 +164,15 @@ module Esapiserver
     end
     
     #
-    # Utility method
+    # Utility method - find one and the sreialize to Ember Friendly JSON
     #
     def find_one(thing, id)
-      frombsonid(DB.collection(thing).find_one(tobsonid(id)), thing).to_json
+      result = frombsonid(@@db.collection(thing).find_one(tobsonid(id)), thing).to_json      
+      hash = JSON.parse(result)
+      jsonArray = []
+      jsonArray << hash[modelName(thing)]
+      newJson = {modelName(params[:thing]) => jsonArray}       
+      newJson.to_json            
     end
     
     #
