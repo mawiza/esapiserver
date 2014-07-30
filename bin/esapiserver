@@ -1,0 +1,4 @@
+#!/usr/bin/env ruby
+
+require 'esapiserver'
+Esapiserver::Server.run!
