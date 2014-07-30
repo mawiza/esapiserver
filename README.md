@@ -1,6 +1,6 @@
 # Esapiserver
 
-A Sinatra/MongoDB API server to use for EmberJS development
+A very lightweight Sinatra/MongoDB CRUD API server to be used for EmberJS development and testing. By using MongoDB as the database server, all the tables are created on the fly when POST requests are made, in other words, no tables needs to be created beforehand. 
 
 ## Installation
 
@@ -9,7 +9,7 @@ Run:
 	Install the gem
     	$ gem install esapiserver
     
-    Start up your mongoDB server    
+    Start up your mongoDB server   
     	$ mongoD
     	
     Start the Ember Sinatra/MongoDB API server
