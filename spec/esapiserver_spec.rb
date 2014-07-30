@@ -70,6 +70,7 @@ describe 'esapiserver that' do
     
     it 'returns a thing with a specific id' do
       get '/api/posts'
+      expect(last_response).to be_ok
       json_hash = JSON.parse(last_response.body)            
       id = json_hash["post"][0]["id"]
       get '/api/posts/' + id
@@ -82,13 +83,13 @@ describe 'esapiserver that' do
   describe 'handle DELETE requests that' do
     it 'deletes a thing with a specific id' do
       get '/api/posts'
+      expect(last_response).to be_ok
       json_hash = JSON.parse(last_response.body)
       id = json_hash["post"][1]["id"]
       delete '/api/posts/' + id
-      expect(last_response).to be_ok
       get '/api/posts'
-      json_hash = JSON.parse(last_response.body)
       expect(last_response).to be_ok
+      json_hash = JSON.parse(last_response.body)
       expect(json_hash["post"].length).to equal(1)
     end
   end
@@ -96,6 +97,7 @@ describe 'esapiserver that' do
   describe 'handle PUT requests that' do
     it 'updates a thing with a specific id' do
       get '/api/posts?name=test'
+      expect(last_response).to be_ok
       json_hash = JSON.parse(last_response.body)
       id = json_hash["post"][0]["id"]      
       payload = '{"post": {"name": "updated test"}}'
