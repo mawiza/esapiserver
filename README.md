@@ -58,6 +58,14 @@ PUT request:
 
 	Updates a thing with a specific id
 		http://localhost:4567/api/:thing/:id
+		
+
+EmberJS
+
+	App.ApplicationAdapter = DS.RESTAdapter.extend
+    	namespace: 'api'
+    	host: 'http://127.0.0.1:4567'
+    	corsWithCredentials: true
 
 ## Contributing
 
