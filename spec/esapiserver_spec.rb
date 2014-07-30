@@ -55,6 +55,9 @@ describe 'esapiserver that' do
       get '/api/posts?ids%5B%5D=' + id1 + '&ids%5B%5D=' + id2
       expect(last_response).to be_ok
       expect(last_response.body).to eq('{"post":[{"name":"test","id":"' + id1 + '"},{"name":"test1","id":"' + id2 + '"}]}')
+      get '/api/posts?ids%5B%5D=' + id1
+      expect(last_response).to be_ok
+      expect(last_response.body).to eq('{"post":[{"name":"test","id":"' + id1 + '"}]}')
       #TODO should check to see if it is parsable by json      
     end
     
