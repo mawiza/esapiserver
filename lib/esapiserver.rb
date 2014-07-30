@@ -167,12 +167,18 @@ module Esapiserver
     # Utility method - find one and the sreialize to Ember Friendly JSON
     #
     def find_one(thing, id)
-      result = frombsonid(@@db.collection(thing).find_one(tobsonid(id)), thing).to_json      
-      hash = JSON.parse(result)
+      result = @@db.collection(thing).find_one(tobsonid(id))
       jsonArray = []
-      jsonArray << hash[modelName(thing)]
-      newJson = {modelName(params[:thing]) => jsonArray}       
-      newJson.to_json            
+      if result != nil
+        normalizedResult = frombsonid(result, thing).to_json      
+        hash = JSON.parse(normalizedResult)        
+        jsonArray << hash[modelName(thing)]
+        newJson = {modelName(params[:thing]) => jsonArray}       
+        newJson.to_json
+      else
+        noResults = {modelName(thing) => jsonArray}
+        noResults.to_json
+      end
     end
     
     #

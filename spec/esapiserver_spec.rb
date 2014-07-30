@@ -64,8 +64,18 @@ describe 'esapiserver that' do
       expect(last_response).to be_ok
       expect(last_response.body).to include('{"post":[{"name":"test1","id"')
     end
+    
+    it 'returns a thing with a specific id' do
+      get '/api/posts'
+      json_hash = JSON.parse(last_response.body)            
+      id = json_hash["post"][0]["id"]
+      get '/api/posts/' + id
+      expect(last_response).to be_ok
+      expect(last_response.body).to eq('{"post":[{"name":"test","id":"' + id + '"}]}')
+    end
+    
   end
-  
+    
   describe 'handle DELETE requests that' do
     it 'deletes a thing with a specific id' do
       get '/api/posts'
