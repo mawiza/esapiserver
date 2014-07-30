@@ -75,7 +75,6 @@ module Esapiserver
       if request.query_string.empty?
         result = collection.find.to_a.map{|t| frombsonid(t, params[:thing])}.to_json
       else
-      #TODO Handle a single ID
         if request.query_string.include? 'ids[]' or request.query_string.include? 'ids%5B%5D'
           ids = []
           
