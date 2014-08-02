@@ -23,7 +23,7 @@ describe 'esapiserver that' do
   end
   
   describe 'handle POST requests that' do
-    it 'creates a new thing' do
+    it 'creates a new model' do
       payload = '{"post": {"name": "test"}}'      
       post '/api/posts', payload, "CONTENT_TYPE" => "application/json"
       expect(last_response).to be_ok
@@ -33,7 +33,7 @@ describe 'esapiserver that' do
   end
   
   describe 'handle GET requests that' do
-    it 'returns a list of things' do
+    it 'returns a list of models' do
       get '/api/posts'
       expect(last_response).to be_ok
       expect(last_response.body).to include('{"post":[{"name":"test","id"')
@@ -41,7 +41,7 @@ describe 'esapiserver that' do
     end
     
     #http://127.0.0.1:4567/api/focusareas?ids%5B%5D=53d7781819cfd232f4000085&ids%5B%5D=53d778e319cfd232f4000087
-    it 'returns a list of things that matches a specific query' do
+    it 'returns a list of models that matches a specific query' do
       #create another post
       payload = '{"post": {"name": "test1"}}'
       post '/api/posts', payload, "CONTENT_TYPE" => "application/json"
@@ -62,13 +62,13 @@ describe 'esapiserver that' do
     end
     
     #http://localhost:4567/api/posts?name=test1
-    it 'returns a thing with a specific key/value' do
+    it 'returns a model with a specific key/value' do
       get '/api/posts?name=test1'
       expect(last_response).to be_ok
       expect(last_response.body).to include('{"post":[{"name":"test1","id"')
     end
     
-    it 'returns a thing with a specific id' do
+    it 'returns a model with a specific id' do
       get '/api/posts'
       expect(last_response).to be_ok
       json_hash = JSON.parse(last_response.body)            
@@ -81,7 +81,7 @@ describe 'esapiserver that' do
   end
     
   describe 'handle DELETE requests that' do
-    it 'deletes a thing with a specific id' do
+    it 'deletes a model with a specific id' do
       get '/api/posts'
       expect(last_response).to be_ok
       json_hash = JSON.parse(last_response.body)
@@ -95,7 +95,7 @@ describe 'esapiserver that' do
   end
   
   describe 'handle PUT requests that' do
-    it 'updates a thing with a specific id' do
+    it 'updates a model with a specific id' do
       get '/api/posts?name=test'
       expect(last_response).to be_ok
       json_hash = JSON.parse(last_response.body)
