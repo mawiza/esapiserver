@@ -1,6 +1,8 @@
 # Esapiserver
 
-A very lightweight Sinatra/MongoDB CRUD API server to be used for EmberJS development and testing. By using MongoDB as the database server, all the tables are created on the fly when POST requests are made, in other words, no tables needs to be created beforehand. 
+A very lightweight Sinatra/MongoDB CRUD API server to be used for EmberJS development and testing. By using MongoDB as the database server, all the tables are created on the fly when POST requests are made, in other words, no tables needs to be created beforehand.
+
+I started out using the fixture and local storage adapter in Ember, but experienced that the limitations that these adapters have, would turn out be a pain in the butt later when it was time to release my app - I wanted to make sure that what I test, was consistant with what I would release, hence the esapiserver. 
 
 ## Installation
 
@@ -25,39 +27,39 @@ Database related requests:
 	Reset a db - this will drop and reload the DB
 		http://localhost:4567/reset_db/ember_test_db
 		
-	List a collection of a selected db
+	List the collections of the selected db
 		http://localhost:4567/db_collections
 	
 	
 POST request:
 
-	Creates a new thing
-		http://localhost:4567/api/:thing
+	Creates a new model
+		http://localhost:4567/api/:model
 	
 	
 GET requests:
 
-	Returns a list of things
-		http://localhost:4567/api/:thing
+	Returns a list of models
+		http://localhost:4567/api/:model
 	
-	Returns a list of things that matches a specific query
-		http://localhost:4567/api/:thing?ids[]=id1&ids[]=id2
+	Returns a list of models that matches a specific query
+		http://localhost:4567/api/:model?ids[]=id1&ids[]=id2
 	
-	Returns a thing with a specific key/value
-		http://localhost:4567/api/:thing?key=value
+	Returns a model with a specific key/value
+		http://localhost:4567/api/:model?key=value
 		
-	Returns a thing with a specific id
-		http://localhost:4567/api/:thing/:id
+	Returns a model with a specific id
+		http://localhost:4567/api/:model/:id
 	
 DELETE request:
 
-	Deletes a thing with a specific id
-		http://localhost:4567/api/:thing/:id
+	Deletes a model with a specific id
+		http://localhost:4567/api/:model/:id
 	
 PUT request:
 
-	Updates a thing with a specific id
-		http://localhost:4567/api/:thing/:id
+	Updates a model with a specific id
+		http://localhost:4567/api/:model/:id
 		
 
 EmberJS
