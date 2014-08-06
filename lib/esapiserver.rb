@@ -79,15 +79,14 @@ module Esapiserver
       if request.query_string.empty?
         result = collection.find.to_a.map{|t| fromBsonId(t, params[:model])}.to_json
       else
-        if request.query_string.include? 'ids[]' or request.query_string.include? 'ids%5B%5D' #don't know why it does not get unescaped
+        if request.query_string.include? 'ids[]' or request.query_string.include? 'ids%5B%5D'
           ids = []
-          
           if request.query_string.include? '&'
             queries = request.query_string.split('&')            
             queries.each do |q|
               key, value = q.split('=')
-              if key != 'ids[]' and key != 'ids%5B%5D' #check to see if all the keys match
-                throw 'multiple query parameters not supported yet, except for _ids[]='
+              if key != 'ids[]' and key != 'ids%5B%5D'
+                throw 'multiple query parameters that also have _ids[]= parameters not supported yet'
               end
               ids << toBsonId(value)
             end            
@@ -97,7 +96,14 @@ module Esapiserver
           end
           query = {"_id" => { "$in" => ids }}
         elsif request.query_string.include? '&'
-          throw 'multiple query parameters not supported yet, except _ids[]='
+          conditions = []
+          queries = request.query_string.split('&')
+          queries.each do |q|
+              key, value = q.split('=')
+              conditions << {modelName(params[:model]) + "." + key => value}
+          end
+          query = {"$and" => conditions }
+          puts query
         else
           key, value = request.query_string.split('=')
           query = {modelName(params[:model]) + "." + key => value}
