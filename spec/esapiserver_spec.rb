@@ -41,7 +41,7 @@ describe 'esapiserver that' do
     end
     
     #http://127.0.0.1:4567/api/focusareas?ids%5B%5D=53d7781819cfd232f4000085&ids%5B%5D=53d778e319cfd232f4000087
-    it 'returns a list of models that matches a specific query' do
+    it 'returns a list of models that matches a list of ids' do
       #create another post
       payload = '{"post": {"name": "test1"}}'
       post '/api/posts', payload, "CONTENT_TYPE" => "application/json"
@@ -59,6 +59,10 @@ describe 'esapiserver that' do
       expect(last_response).to be_ok
       expect(last_response.body).to eq('{"post":[{"name":"test","id":"' + id1 + '"}]}')
       #TODO should check to see if it is parsable by json      
+    end
+    
+    it 'returns a list of models that matches a specific query' do
+      pending  
     end
     
     #http://localhost:4567/api/posts?name=test1
