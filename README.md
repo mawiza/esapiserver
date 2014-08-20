@@ -1,8 +1,8 @@
 # Esapiserver
 
-A very lightweight Sinatra/MongoDB CRUD API server to be used for EmberJS development and testing. By using MongoDB as the database server, all the tables are created on the fly when POST requests are made, in other words, no tables needs to be created beforehand.
+A very lightweight Sinatra/MongoDB CRUD API server to be used for EmberJS development and testing. By using MongoDB as the database server, all the tables are created on the fly when POST requests are made.
 
-I started out using the fixture and local storage adapter in Ember, but experienced that the limitations that these adapters have, would turn out be a pain in the butt later when it was time to release my app - I wanted to make sure that what I test, was consistant with what I would release, hence the esapiserver. 
+I started out using the fixture and local storage adapter in Ember, but experienced that the limitations that these adapters have, would turn out be a pain later when it was time to release my app - I wanted to make sure that what I test, was consistant with what I would release, hence the esapiserver. 
 
 ## Installation
 
