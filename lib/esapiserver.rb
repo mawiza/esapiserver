@@ -9,7 +9,7 @@ require "esapiserver/version"
 
 module Esapiserver
   class Server < Sinatra::Application
-    POOL_SIZE = 5
+    POOL_SIZE = 25
     TIMEOUT = 5
     
     $mongoDB = Mongo::Connection.new
@@ -103,11 +103,11 @@ module Esapiserver
               conditions << {modelName(params[:model]) + "." + key => value}
           end
           query = {"$and" => conditions }
-          puts query
         else
           key, value = request.query_string.split('=')
           query = {modelName(params[:model]) + "." + key => value}
         end
+        puts query
         result = collection.find(query).to_a.map{|t| fromBsonId(t, params[:model])}.to_json
       end
       serializeJSON(result, params[:model])
